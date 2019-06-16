@@ -7,8 +7,8 @@
       </h1>
 
       <div class="list-menu">
-        <a class="list-menu-item">
-          <p>List#1</p>
+        <a class="list-menu-item" *ngFor="let list of lists" [routerLink]="['/lists', list._id]" routerLinkActive="is-active">
+          <p>{{ list.title }}</p>
         </a>
       </div>
 
@@ -19,15 +19,10 @@
       <h1 class="title has-text-primary">
         TASKS
       </h1> 
-      <div class="tasks">
-        <p>This is something I have to do</p>
+      <div class="tasks" *ngFor="let task of tasks">
+        <p>{{ task.title}}</p>
       </div>
-      <div class="tasks">
-        <p>This is something I have to do</p>
-      </div>
-      <div class="tasks completed">
-        <p>This is something I have to do</p>
-      </div>
+      
     </div>
   </div>
 </div>

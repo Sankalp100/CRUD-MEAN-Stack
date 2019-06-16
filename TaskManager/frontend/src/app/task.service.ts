@@ -13,6 +13,10 @@ export class TaskService {
   }
 
   getLists(){
+    return this.webRequestService.get('lists');
+  }
 
+  getTasks(listId: string){
+    return this.webRequestService.get(`lists/${listId}/tasks`);
   }
 }
