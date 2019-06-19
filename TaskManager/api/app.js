@@ -56,7 +56,7 @@ app.patch('/lists/:id', (req, res) => {
     List.findByIdAndUpdate({_id: req.params.id}, {
         $set: req.body
     }).then(() => {
-        res.sendStatus(200);
+        res.send({ message: 'Updated successfully.' });
     });
 });
 
@@ -104,7 +104,7 @@ app.patch('/lists/:listId/tasks/:taskId', (req, res) => {
     }, {
         $set:req.body
     }).then(() => {
-        res.sendStatus(200);
+        res.send({ message: 'Updated successfully.' });
     })
 });
 
