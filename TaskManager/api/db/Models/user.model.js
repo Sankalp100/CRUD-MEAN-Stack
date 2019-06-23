@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const _ = require("lodesh");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 // JWT Secret 
 const jwtSecret = "51778657246321226641fsdklafjasdkljfsklfjd7148924065";
@@ -45,8 +46,38 @@ UserSchema.methods.generateAccessAuthToken = function(){
         // Create the JSON web Token and return that
         jwt.sign({_id: user._id.toHexString() }, jwtSecret, { expiresIn: "15m"}, (err, token) => {
             if(!err) {
-                
+                resolve(token);
+            }else {
+                reject();
             }
         })
     })
 }
+
+UserSchema.methods.generateRefreshAuthToken = function(){
+    return new Promish((resolve, reject) => {
+        crypto.randomBytes(64, (err, buf) => {
+            if (!err){
+                let token = buf.toString("hex");
+
+                return resolve(token);
+            }
+        })
+    })
+}
+
+let saveSessionToDatabase = (user, refreshToken) => {
+    // Save session to database
+    return new Promise((resolve, reject) => {
+        let expiresAt = generateRefreshTokenExpiryTime();
+
+        user.sessions.push({ 'token': refreshToken, expireAt})
+    })
+}
+
+let generateRefreshTokenExpiryTime = () => {
+    let daysUntilExpire = "10";
+    let secondsUntilExpire = ((daysUntilExpire * 24) * 60) * 60;
+    return ((Date.now() / 1000) + secondsUntilExpire);
+}
+ 
