@@ -66,12 +66,31 @@ UserSchema.methods.generateRefreshAuthToken = function(){
     })
 }
 
+UserSchema.methods.createSession = function() {
+    let user = this;
+
+    return user.generateRefreshAuthToken().then((refreshToken)=> {
+        return saveSessionToDatabase(user, refreshToken);
+    }).then((refreshToken) => {
+        return refreshToken;
+    }).catch((e)=>{
+        return Promise.reject('failed to save session to database. \n' + e);
+    });
+}
+
 let saveSessionToDatabase = (user, refreshToken) => {
     // Save session to database
     return new Promise((resolve, reject) => {
         let expiresAt = generateRefreshTokenExpiryTime();
 
-        user.sessions.push({ 'token': refreshToken, expireAt})
+        user.sessions.push({ 'token': refreshToken, expireAt});
+
+        user.save().then(() => {
+            //Session saved successfully
+            return resolve(refreshToken);
+        }).catch((e) => {
+            reject(e);
+        });
     })
 }
 
