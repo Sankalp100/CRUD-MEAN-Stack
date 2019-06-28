@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const _ = require("lodesh");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const bcrypt = require('bcryptjs');
 
 // JWT Secret 
 const jwtSecret = "51778657246321226641fsdklafjasdkljfsklfjd7148924065";
@@ -78,6 +79,39 @@ UserSchema.methods.createSession = function() {
     });
 }
 
+UserSchema.static.findByIdAndToken = function(_id, token) {
+    const user = this;
+
+    return User.findOne({
+        _id,
+        'session.token': token
+    });
+}
+
+UserSchema.statics.findByCredentials = function(email, password){
+    let User = this;
+}
+
+
+// Middleware
+
+UserSchema.pre('save', function (next) {
+    let user = this;
+    let costFactor = 10;
+
+    if(user.isModified('password')){
+        bcrypt.genSalt(costFactor, (err, salt) => {
+            bcrypt.hash(user.password, salt, (err, hash) => {
+                user.password = hash;
+                next();
+            })
+        })
+    }
+});
+
+
+
+/* Helper methods*/ 
 let saveSessionToDatabase = (user, refreshToken) => {
     // Save session to database
     return new Promise((resolve, reject) => {
