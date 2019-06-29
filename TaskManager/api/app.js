@@ -5,7 +5,7 @@ const { mongoose } = require('./db/mongoose');
 
 const bodyParser = require('body-parser');
 
-/* MIDDLEWARE*/ 
+/* MIDDLEWARE*/
 
 // Load middleware
 app.use(bodyParser.json());
@@ -206,17 +206,21 @@ app.post('/users/login', (req, res) => {
             });
         }).then((authTokens) => {
             res
-            .header('x-refresh-token', authTokens.refreshToken)
-            .header('x-access-token', authTokens.accessToken)
-            .send(user);
+                .header('x-refresh-token', authTokens.refreshToken)
+                .header('x-access-token', authTokens.accessToken)
+                .send(user);
         })
     }).catch((e) => {
         res.status(400).send(e);
     });
 })
 
-app.get('/users/me/access-token', (req, res) => {
-
+app.get('/users/me/access-token', verifySession, (req, res) => {
+    req.userObject.generateAccessAuthToken().then((accessToken) => {
+        res.header('x-access-token', accessToken).send({ accessToken });
+    }).catch((e) => {
+        res.status(400).send(e);
+    });
 })
 
 app.listen(3000, () => {
