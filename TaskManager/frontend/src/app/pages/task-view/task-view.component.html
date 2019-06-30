@@ -25,13 +25,13 @@
           [ngClass]="{ 'completed': task.completed }">
           <p>{{ task.title}}</p>
         </div>
-
+        <h1 class="empty-state-text" *ngIf="tasks.length === 0">There are no tasks here! Click the add button to create a new task.</h1>
         <button routerLink="./new-task" class="circle-add-button button is-primary">
           <img src="../../../assets/plus-icon.svg">
         </button>
       </div>
       <div *ngIf="!tasks">
-        <h1 class="title is-4">pls select the list from sidebar</h1>
+        <h1 class="empty-state-text">Please select the list from sidebar</h1>
       </div>
     </div>
   </div>
