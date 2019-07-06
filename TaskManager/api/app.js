@@ -5,6 +5,8 @@ const { mongoose } = require('./db/mongoose');
 
 const bodyParser = require('body-parser');
 
+const jwt = require('jsonwebtoken');
+
 /* MIDDLEWARE*/
 
 // Load middleware
@@ -26,6 +28,21 @@ app.use(function (req, res, next) {
 
     next();
 });
+
+//checked where the request has valid jwt acces token
+let authenticate = (req, res, next) => {
+    let token = req.header('x-access-token');
+
+    //verify jwt
+    jwt.verify(token, User.getJWTSecret(), (err, decoded) => {
+        if(err){
+            res.status(401).send(err);
+        } else {
+            req.user_id = decoded._id;
+            next();
+        }
+    });
+}
 
 let verifySession = (req, res, next) => {
     // grab the refresh token from the request header
