@@ -102,8 +102,10 @@ let verifySession = (req, res, next) => {
 
 //List Routes
 
-app.get('/lists', (req, res) => {
-    List.find({}).then((lists) => {
+app.get('/lists', authenticate, (req, res) => {
+    List.find({
+        _userId: req.user_id
+    }).then((lists) => {
         res.send(lists);
     }).catch((e) => {
         res.send(e);
