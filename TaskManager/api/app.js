@@ -104,7 +104,7 @@ let verifySession = (req, res, next) => {
 
 app.get('/lists', authenticate, (req, res) => {
     List.find({
-        _userId: req.user_id
+        // _userId: req.user_id
     }).then((lists) => {
         res.send(lists);
     }).catch((e) => {
@@ -140,6 +140,8 @@ app.delete('/lists/:id', (req, res) => {
         _id: req.params.id
     }).then((removedListDoc) => {
         res.send(removedListDoc);
+
+        deleteTasksFromList(removedListDoc._id);    
     })
 })
 
@@ -241,6 +243,15 @@ app.get('/users/me/access-token', verifySession, (req, res) => {
         res.status(400).send(e);
     });
 })
+
+//Helper methods
+let deleteTasksFromList = (_listId) => {
+    Task.deleteMany({
+        _listId
+    }).then(() => {
+        console.log("Tasks from" + _listId + "were deleted");
+    }) 
+}
 
 app.listen(3000, () => {
     console.log("Server is listening on port 3000");
