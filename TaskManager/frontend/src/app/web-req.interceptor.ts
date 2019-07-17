@@ -23,7 +23,7 @@ export class WebReqInterceptor implements HttpInterceptor {
     // call next() and handle the response
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.log(error);
+        console.log(error);   
 
         if (error.status === 401) {
           // 401 error so we are unauthorized
