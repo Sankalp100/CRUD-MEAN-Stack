@@ -13,6 +13,8 @@ export class TaskViewComponent implements OnInit {
 
   lists: List[];
   tasks: Task[];
+
+  selectedListId: string;
   constructor(private taskService: TaskService, private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -20,6 +22,7 @@ export class TaskViewComponent implements OnInit {
       (params: Params) => {
         if (params.listId) {
           // console.log(params);
+          this.selectedListId = params.listId;
           this.taskService.getTasks(params.listId).subscribe((tasks: Task[]) => {
             this.tasks = tasks;
           })
@@ -38,5 +41,9 @@ export class TaskViewComponent implements OnInit {
       console.log("completed successfilly");
       task.completed = !task.completed;
     })
+  }
+
+  onDeleteListClick(){
+    
   }
 }

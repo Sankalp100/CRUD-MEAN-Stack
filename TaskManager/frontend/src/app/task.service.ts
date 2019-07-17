@@ -16,6 +16,10 @@ export class TaskService {
   createList(title: string){
     return this.webRequestService.post('lists',{ title});
   }
+
+  deleteList(id: string){
+    return this.webRequestService.delete(`lists/${id}`);
+  }
   
   getTasks(listId: string){
     return this.webRequestService.get(`lists/${listId}/tasks`);
