@@ -39,6 +39,13 @@
 
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
+
+    .top-bar {
+        display: flex;
+        .title {
+            flex-grow: 1;
+        }
+    }
 }
 
 .title {
